@@ -15,6 +15,9 @@ app.use('/subscribers',subscribersRouter);
 // translation routes
 const translationsRouter = require('./routes/translations');
 app.use('/translations',translationsRouter);
+// new translation routes
+const translationsSecondRouter = require('./routes/translationsSecond');
+app.use('/translationsSecond',translationsSecondRouter);
 
 connectDB().then(()=>{
     app.listen(process.env.PORT || PORT, () => {

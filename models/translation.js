@@ -1,9 +1,21 @@
 const mongoose = require('mongoose');
 const https = require('https');
 const translationSchema = new mongoose.Schema({
-    url : {
+    wordToTranslate : {
         type: String,
-        default: 'https://665.uncovernet.workers.dev/translate?text=Hello&source_lang=en&target_lang=fr',
+        required: true,
+    },
+    wordTranslated : {
+        type: String,
+        required: true,
+    },
+    sourceLanguage : {
+        type: String,
+        required: true,
+    },
+    targetLanguage : {
+        type: String,
+        required: true,
     },
     translationDate: {
         type: Date,
