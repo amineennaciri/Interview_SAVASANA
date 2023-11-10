@@ -8,6 +8,7 @@ router.post('/', (req, res) => {
   // Extract data from the POST request body
   //const requestData = req.body;
   const url = `https://665.uncovernet.workers.dev/translate?text=${req.body.wordToTranslate}&source_lang=${req.body.sourceLanguage}&target_lang=${req.body.targetLanguage}`;
+  
   // Define the URL for the GET request
   //const url = 'https://jsonplaceholder.typicode.com/todos/1';
 
@@ -53,5 +54,48 @@ router.post('/', (req, res) => {
   });
 });
 
+// Getting All translations
+router.get('/', async (req,res) => {
+  try {
+      const translations = await Translation.find();
+      res.json(translations);
+  } catch (err) {
+      res.status(500).json({ message: err.message});
+  }
+})
+
+// Retrieve translations for a given word and target language.
+router.get('/:wordToTranslate&:targetLanguage', getTranslation, (req,res) => {
+  res.json(res.translation);
+})
+
+// Deleting One Translation for a given word and target language
+router.delete('/:wordToTranslate&:targetLanguage', getTranslation, async(req,res) => {
+  try {
+      await res.transaltion.deleteMany();//deleteOne();
+      res.json({ message: 'Deleted Translation'});
+  } catch (err) {
+      res.status(500).json({ message: err.message});
+  }
+})
+
+// getTranslation Middleware
+async function getTranslation(req,res,next){
+  let translation;
+  try {
+    translation = await Translation.find({
+        wordToTranslate: req.params.wordToTranslate,
+        targetLanguage: req.params.targetLanguage
+        });
+      //await YourDataModel.find({ age: searchAge });
+      if(translation===null){
+          return res.status(404).json({ message: 'Cannot find translation' });
+      }
+  } catch (err) {
+      return res.status(500).json({ message: err.message });
+  }
+  res.translation = translation;
+  next();
+}
 
 module.exports = router;
