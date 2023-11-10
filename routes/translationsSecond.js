@@ -69,15 +69,57 @@ router.get('/:wordToTranslate&:targetLanguage', getTranslation, (req,res) => {
   res.json(res.translation);
 })
 
-// Deleting One Translation for a given word and target language
-router.delete('/:wordToTranslate&:targetLanguage', getTranslation, async(req,res) => {
+// Deleting Existing Translation for a given word and target language
+router.delete('/:wordToTranslate&:targetLanguage', async(req,res) => {
   try {
-      await res.transaltion.deleteMany();//deleteOne();
+      //await res.translation.deleteOne();//deleteOne();
+      await Translation.findOneAndDelete({
+        wordToTranslate: req.params.wordToTranslate,
+        targetLanguage: req.params.targetLanguage
+      });
       res.json({ message: 'Deleted Translation'});
   } catch (err) {
       res.status(500).json({ message: err.message});
   }
 })
+
+router.put('/:wordToTranslate&:targetLanguage', async(req,res) => {
+  try{
+    const url = `https://665.uncovernet.workers.dev/translate?text=${req.body.wordToTranslate}&source_lang=${req.body.sourceLanguage}&target_lang=${req.body.targetLanguage}`;
+    // Make an HTTPS GET request
+    https.get(url, (response) => {
+    let data = '';
+
+    // As data is received, add it to the 'data' variable
+    response.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    // When the response ends, handle the data
+    response.on('end', async () => {
+      // Parse the GET request data
+      const getData = JSON.parse(data);
+      //console.log(getData.response.translated_text);
+      // const wordTranslatedJSON = JSON.stringify({'wordTranslated': getData.response.translated_text});
+      //console.log(wordTranslatedJSON);
+      await Translation.findOneAndUpdate(
+        {wordToTranslate: req.params.wordToTranslate,
+        targetLanguage: req.params.targetLanguage,
+        sourceLanguage: req.body.sourceLanguage},
+        { wordTranslated: `${getData.response.translated_text}`,
+          targetLanguage: req.body.targetLanguage,
+          wordToTranslate: req.body.wordToTranslate
+        }
+      )
+      res.json('Updated the Translation');
+  })
+  })
+  }catch(err){
+      console.log(err)
+  }
+})
+
+
 
 // getTranslation Middleware
 async function getTranslation(req,res,next){
@@ -99,3 +141,51 @@ async function getTranslation(req,res,next){
 }
 
 module.exports = router;
+
+/*
+// Update existing translations.
+router.patch('/:wordToTranslate&:targetLanguage', getTranslation, async(req,res) => {
+  if (req.body.wordToTranslate != null && req.body.targetLanguage != null && req.body.sourceLanguage != null){
+    // update the url
+    const url = `https://665.uncovernet.workers.dev/translate?text=${req.body.wordToTranslate}&source_lang=${req.body.sourceLanguage}&target_lang=${req.body.targetLanguage}`;
+    // Make an HTTPS GET request
+    https.get(url, (response) => {
+    let data = '';
+
+    // As data is received, add it to the 'data' variable
+    response.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    // When the response ends, handle the data
+    response.on('end', async () => {
+      // Parse the GET request data
+      const getData = JSON.parse(data);
+      // update the database
+      res.translation.wordTranslated = getData.response.translated_text;
+      res.translation.wordToTranslate = req.body.wordToTranslate;
+      res.translation.targetLanguage = req.body.targetLanguage;
+      //console.log(res.translation);
+      try {
+        //const updatedTranslation = await res.translation.save();
+        //res.json(updatedTranslation);
+        console.log(res.translation);
+        await Translation.findOneAndUpdate(
+          {wordToTranslate: req.params.wordToTranslate,
+          targetLanguage: req.params.targetLanguage},
+          JSON.stringify({
+            wordToTranslate: getData.response.translated_text,
+            targetLanguage: req.body.targetLanguage,
+            wordTranslated: req.body.wordToTranslate
+      })
+      )
+      } catch (err) {
+        res.status(400).json( {message: err.message} );
+    }
+
+    })
+    })
+  }
+})
+
+*/
