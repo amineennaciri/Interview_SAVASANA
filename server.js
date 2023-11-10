@@ -12,10 +12,10 @@ app.use(express.json());//let our app accept json as a body instead of a post el
 // subscription routes
 const subscribersRouter = require('./routes/subscribers');
 app.use('/subscribers',subscribersRouter);
-// translation routes
+// translation routes (this one is not working)
 const translationsRouter = require('./routes/translations');
 app.use('/translations',translationsRouter);
-// new translation routes
+// new translation routes (use this route it is working well)
 const translationsSecondRouter = require('./routes/translationsSecond');
 app.use('/translationsSecond',translationsSecondRouter);
 
