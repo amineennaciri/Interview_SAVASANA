@@ -9,15 +9,9 @@ const connectDB = require("./config/database");
 require("dotenv").config({ path: "./config/.env" });
 
 app.use(express.json());//let our app accept json as a body instead of a post element
-// subscription routes
-const subscribersRouter = require('./routes/subscribers');
-app.use('/subscribers',subscribersRouter);
-// translation routes (this one is not working)
+// translation routes
 const translationsRouter = require('./routes/translations');
 app.use('/translations',translationsRouter);
-// new translation routes (use this route it is working well)
-const translationsSecondRouter = require('./routes/translationsSecond');
-app.use('/translationsSecond',translationsSecondRouter);
 
 connectDB().then(()=>{
     app.listen(process.env.PORT || PORT, () => {
