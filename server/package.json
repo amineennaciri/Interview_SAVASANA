@@ -4,14 +4,20 @@
   "description": "Task 1: Backend API Development for Word Translations\r Develop a backend API that the Chrome extension can communicate with to fetch translations.\r The API should have endpoints to:\r 1. Retrieve translations for a given word and target language.\r 2. Add new translations to the database.\r 3. Update existing translations.\r 4. Delete translations.\r Requirements:\r ● 1. The API should support at least three languages for translation.\r ● 2. Implement proper error handling and validation.\r ● 3. Ensure the API responses follow RESTful design principles.\r ● 4. Include appropriate API documentation.",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
-    "start:client": "cd savasana-api && npm run dev",
-    "start:server": "cd server && npm run dev"
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "http": "^0.0.1-security",
+    "https": "^1.0.0",
+    "mongoose": "^8.0.0",
+    "translate": "^2.0.2"
+  },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "dotenv": "^16.3.1",
+    "nodemon": "^3.0.1"
   }
 }

@@ -12,3 +12,14 @@ Requirements:
 ● 2. Implement proper error handling and validation.
 ● 3. Ensure the API responses follow RESTful design principles.
 ● 4. Include appropriate API documentation.
+
+Task 2: Basic Chrome Extension Development
+Develop a basic Chrome extension using the Plasmo Framework that interacts with the backend
+API developed in Task 1. The extension doesn't need a sophisticated UI but should be able to:
+1. Capture a word selected by the user.
+2. Communicate with the backend API to fetch the translation.
+3. Display the translation to the user.
+
+Requirements:
+● 1. Use the Plasmo Framework for the implementation.
+● 2. Implement basic error handling.
